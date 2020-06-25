@@ -262,3 +262,13 @@ async def predict(searchitem: Searchitem):
     print(type(X_new))
     print(X_new)
     return spotipy.search(X_new, search_type="track")
+
+
+@router.post('/track')
+async def predict(item: Item):    
+    """Does Search"""
+    X_new = list(item)
+    X_new = X_new[0][1]
+    print(type(X_new))
+    print(X_new)
+    return spotipy.get_track(X_new)
