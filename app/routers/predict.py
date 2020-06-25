@@ -136,7 +136,6 @@ class Searchitem(BaseModel):
         return dataframe
 
 
-
 class SpotifyAPI(object):
     access_token = None
     access_token_expires = datetime.datetime.now()
@@ -272,3 +271,21 @@ async def predict(item: Item):
     print(type(X_new))
     print(X_new)
     return spotipy.get_track(X_new)
+
+@router.post('/artist')
+async def predict(searchitem: Searchitem):    
+    """Does Search"""
+    X_new = list(searchitem)
+    X_new = X_new[0][1]
+    print(type(X_new))
+    print(X_new)
+    return spotipy.search(X_new, search_type="artist")
+
+@router.post('/album')
+async def predict(searchitem: Searchitem):    
+    """Does Search"""
+    X_new = list(searchitem)
+    X_new = X_new[0][1]
+    print(type(X_new))
+    print(X_new)
+    return spotipy.search(X_new, search_type="album")
