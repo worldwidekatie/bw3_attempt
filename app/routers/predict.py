@@ -236,7 +236,7 @@ class SpotifyAPI(object):
             return {}
         return r.json()
 
-spotify = SpotifyAPI(client_id, client_secret)
+spotipy = SpotifyAPI(client_id, client_secret)
 
 @router.post('/predict')
 async def predict(item: Item):    
@@ -256,4 +256,4 @@ async def predict(searchitem: Searchitem):
     X_new = X_new[0][1]
     print(type(X_new))
     print(X_new)
-    return spotify.search(X_new, search_type="track")
+    return spotipy.search(X_new, search_type="track")
