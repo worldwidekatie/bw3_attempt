@@ -255,7 +255,7 @@ async def predict(item: Item):
 
 @router.post('/search')
 async def predict(searchitem: Searchitem):    
-    """Does Search"""
+    """Does search by track"""
     X_new = list(searchitem)
     X_new = X_new[0][1]
     print(type(X_new))
@@ -265,7 +265,7 @@ async def predict(searchitem: Searchitem):
 
 @router.post('/track')
 async def predict(item: Item):    
-    """Does Search"""
+    """Does search for track by track id"""
     X_new = list(item)
     X_new = X_new[0][1]
     print(type(X_new))
@@ -274,7 +274,7 @@ async def predict(item: Item):
 
 @router.post('/artist')
 async def predict(searchitem: Searchitem):    
-    """Does Search"""
+    """Does search by artist"""
     X_new = list(searchitem)
     X_new = X_new[0][1]
     print(type(X_new))
@@ -283,9 +283,20 @@ async def predict(searchitem: Searchitem):
 
 @router.post('/album')
 async def predict(searchitem: Searchitem):    
-    """Does Search"""
+    """Does search by album"""
     X_new = list(searchitem)
     X_new = X_new[0][1]
     print(type(X_new))
     print(X_new)
     return spotipy.search(X_new, search_type="album")
+
+@router.post('/predict_all')
+async def predict(item: Item):    
+    """Use a KNN model to made song predictions"""
+    X_new = list(item)
+    X_new = X_new[0][1]
+    features = spotipy.get_features(X_new)
+    features = [features['acousticness'], features['danceability'],features['energy'], features['instrumentalness'], features['liveness'], features['loudness'], features['tempo'], features['valence']]
+    diff_df = knn_predictor(features)
+    something = diff_df.to_dict(orient='records')
+    return JSONResponse(content=something)
