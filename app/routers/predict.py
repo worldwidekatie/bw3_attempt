@@ -99,6 +99,9 @@ def knn_predictor(audio_feats, k=20):
     cols.insert(0, cols.pop(cols.index('track_id')))
     diff_df = diff_df.loc[:, cols]
 
+    # Remove the suggestion of the same song (all zeros)
+    diff_df = diff_df[~(diff_df == 0).any(axis=1)]
+
     # Grab only the unique 10 songs
     diff_df = diff_df.drop_duplicates(subset=['track_id'])[:10]
 
@@ -244,137 +247,12 @@ spotipy = SpotifyAPI(client_id, client_secret)
 async def predict(item: Item):    
     """Use a KNN model to made song predictions"""
     X_new = list(item)
-    print(X_new)
-    #song_id = df['track_id'].iloc[i]
-    #return spotipy.get_track(X_new)
-    # audio_features = []
-    # for i in X_new:
-    #     audio_features.append(i[1])
-    # diff_df = knn_predictor(audio_features)
-    # something = diff_df.to_dict(orient='records')
-    # return JSONResponse(content=something)
-    return [
-  {
-    "track_id": "5qMBYiFhO2VBlc1jhtU43K",
-    "acousticness": 0.7526060527691405,
-    "danceability": 0.15624341143791765,
-    "energy": 0.4365071897694668,
-    "instrumentalness": 0.1981717245813009,
-    "liveness": 59.868213802915015,
-    "loudness": 16.93577352219514,
-    "tempo": 2.017648546491384,
-    "valence": 2.3486442817362363,
-    "sum": 82.7138085318956
-  },
-  {
-    "track_id": "3RjtoLl66MHWOOlV0w0g9s",
-    "acousticness": 0.7526060527691405,
-    "danceability": 0.15624341143791765,
-    "energy": 0.4365071897694668,
-    "instrumentalness": 0.1981717245813009,
-    "liveness": 59.868213802915015,
-    "loudness": 16.93577352219514,
-    "tempo": 2.017648546491384,
-    "valence": 2.3486442817362363,
-    "sum": 82.7138085318956
-  },
-  {
-    "track_id": "3fUGcqgUSvxkXwmEaW0aZF",
-    "acousticness": 1.4418184346514722,
-    "danceability": 0.03771392689880759,
-    "energy": 0.4289157603821717,
-    "instrumentalness": 0.5251550701404476,
-    "liveness": 59.8596397297347,
-    "loudness": 16.818738231080587,
-    "tempo": 3.118337109219709,
-    "valence": 1.6988065547987383,
-    "sum": 83.92912481690662
-  },
-  {
-    "track_id": "66dwIPDVSwXMrpJzooGyNj",
-    "acousticness": 1.4418184346514722,
-    "danceability": 0.03771392689880759,
-    "energy": 0.4289157603821717,
-    "instrumentalness": 0.5251550701404476,
-    "liveness": 59.8596397297347,
-    "loudness": 16.818738231080587,
-    "tempo": 3.118337109219709,
-    "valence": 1.6988065547987383,
-    "sum": 83.92912481690662
-  },
-  {
-    "track_id": "62GqL0dG5lhljrvkVo7Kt6",
-    "acousticness": 1.4458210586025289,
-    "danceability": 1.4654554452108128,
-    "energy": 1.4044144366495888,
-    "instrumentalness": 0.52251608334144,
-    "liveness": 59.92671924343951,
-    "loudness": 16.558659806381577,
-    "tempo": 2.2458448139361775,
-    "valence": 0.5952359771001464,
-    "sum": 84.16466686466178
-  },
-  {
-    "track_id": "4EAHFmFxEzS5bsj3sSvLsW",
-    "acousticness": 1.236303426009532,
-    "danceability": 0.16701881912329075,
-    "energy": 1.26397299298463,
-    "instrumentalness": 0.5251550701404476,
-    "liveness": 59.84097851163637,
-    "loudness": 16.890093080933905,
-    "tempo": 3.214651403917724,
-    "valence": 1.4988564849718158,
-    "sum": 84.63702978971772
-  },
-  {
-    "track_id": "0JnqJDCyFzDNa2ZxMXCgsA",
-    "acousticness": 1.3236846531100688,
-    "danceability": 0.5549334957967413,
-    "energy": 0.4554857632377045,
-    "instrumentalness": 0.26588039714657885,
-    "liveness": 59.85610922901339,
-    "loudness": 16.70787146670569,
-    "tempo": 2.9582016488145415,
-    "valence": 2.629343418224032,
-    "sum": 84.75151007204875
-  },
-  {
-    "track_id": "66TYPwrRMmjWK1Bs4xDOzL",
-    "acousticness": 0.7356935572012946,
-    "danceability": 0.7650539456615273,
-    "energy": 0.23533431100614755,
-    "instrumentalness": 0.5251550701404476,
-    "liveness": 59.838961082652766,
-    "loudness": 16.74755009816618,
-    "tempo": 3.0207282675499467,
-    "valence": 3.0638503007325366,
-    "sum": 84.93232663311085
-  },
-  {
-    "track_id": "77t5b1UmwcyxCRChDKi5kl",
-    "acousticness": 0.7356935572012946,
-    "danceability": 0.7650539456615273,
-    "energy": 0.23533431100614755,
-    "instrumentalness": 0.5251550701404476,
-    "liveness": 59.838961082652766,
-    "loudness": 16.74755009816618,
-    "tempo": 3.0207282675499467,
-    "valence": 3.0638503007325366,
-    "sum": 84.93232663311085
-  },
-  {
-    "track_id": "2ZY4JhvBJftNIXigwCbGhw",
-    "acousticness": 1.3628652678422448,
-    "danceability": 0.5118318650552469,
-    "energy": 1.438575868892417,
-    "instrumentalness": 0.5251550701404476,
-    "liveness": 59.85005694206259,
-    "loudness": 16.511645629609063,
-    "tempo": 3.054677761884025,
-    "valence": 1.7603296532070218,
-    "sum": 85.01513805869305
-  }
-]
+    X_new = X_new[0][1]
+    song_id = df[df['track_id']==X_new]
+    song_id = song_id.drop(columns='track_id').values.tolist()
+    diff_df = knn_predictor(song_id[0])
+    something = diff_df.to_dict(orient='records')
+    return JSONResponse(content=something)
 
 @router.post('/search')
 async def predict(searchitem: Searchitem):    
