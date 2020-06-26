@@ -20,14 +20,15 @@ import os
 from dotenv import load_dotenv
 from joblib import load
 
+
 load_dotenv()
 
 client_id=os.getenv('SPOTIPY_CLIENT_ID', default='OOPS')
 client_secret=os.getenv('SPOTIPY_CLIENT_SECRET', default='OOPS')
 
 model=load('knn_final.joblib')
-df = pd.read_csv("https://raw.githubusercontent.com/BW-pilot/MachineLearning/master/CSVs/spotify_final.csv")
-df = df.drop(columns = ['artist_name', 'track_name'])
+df1 = pd.read_csv("https://raw.githubusercontent.com/BW-pilot/MachineLearning/master/CSVs/spotify_final.csv")
+df = df1.drop(columns = ['artist_name', 'track_name'])
 spotify = df.drop(columns = ['track_id'])
 scaler = StandardScaler()
 spotify_scaled = scaler.fit_transform(spotify)
@@ -106,6 +107,7 @@ def knn_predictor(audio_feats, k=20):
     diff_df = diff_df.drop_duplicates(subset=['track_id'])[:10]
 
     return diff_df
+
 
 
 class Item(BaseModel):
